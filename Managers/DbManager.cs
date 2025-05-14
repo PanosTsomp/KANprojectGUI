@@ -5,6 +5,8 @@ namespace KANprojectGUI.Managers;
 
 public class DbManager : Singleton<DbManager>
 {
+    private NpgsqlConnection? _conn;
+
     public void ConnectToDatabase()
     {
         var connString =
@@ -17,8 +19,8 @@ public class DbManager : Singleton<DbManager>
 
         try
         {
-            using var conn = new NpgsqlConnection(connString);
-            conn.Open();
+            _conn = new NpgsqlConnection(connString);
+            _conn.Open();
         }
         catch (NpgsqlException ex)
         {
@@ -31,5 +33,24 @@ public class DbManager : Singleton<DbManager>
             Environment.Exit(1);
         }
         Console.Write("Connectd to databse");
+    }
+
+    public void AddUser(string name, string password, string email)
+    {
+        using var cmd = new NpgsqlCommand(
+            "INSERT INTO public.users (name, email, password) VALUES (@name, @email, @password);",
+            _conn
+        );
+
+        cmd.Parameters.AddWithValue("name", name);
+        cmd.Parameters.AddWithValue("email", email);
+        cmd.Parameters.AddWithValue("password", password);
+
+        var reuslt = cmd.ExecuteNonQuery();
+
+        if (reuslt > 0)
+            Console.WriteLine("Insert successful.");
+        else
+            Console.WriteLine("Insert failed - no rows affected");
     }
 }
