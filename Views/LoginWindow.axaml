@@ -1,0 +1,54 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:KANprojectGUI.ViewModels"
+        x:Class="KANprojectGUI.Views.LoginWindow"
+        x:DataType="vm:LoginWindowViewModel"
+        Width="400" Height="300"
+        Title="Login"
+        WindowStartupLocation="CenterScreen">
+
+    <Design.DataContext>
+        <vm:LoginWindowViewModel />
+    </Design.DataContext>
+
+    <Border Padding="30">
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,*">
+            
+            <TextBlock Grid.Row="0"
+                       Text="Login"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,20"/>
+
+            <StackPanel Grid.Row="1" Margin="0,0,0,10">
+                <TextBlock Text="Username" Margin="0,0,0,5"/>
+                <TextBox Text="{Binding Name, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="2" Margin="0,0,0,10">
+                <TextBlock Text="Password" Margin="0,0,0,5"/>
+                <TextBox Text="{Binding Password, Mode=TwoWay}" PasswordChar="●" />
+            </StackPanel>
+            
+            <StackPanel Grid.Row="3" Margin="0,0,0,10">
+                <TextBlock Text="Email" Margin="0,0,0,5"/>
+                <TextBox Text="{Binding Email, Mode=TwoWay}" />
+            </StackPanel>
+            
+            <Button Grid.Row="4"
+                    Content="Login"
+                    Command="{Binding LoginCommand}"
+                    HorizontalAlignment="Center"
+                    Width="100"/>
+            
+            <TextBlock Grid.Row="5"
+                       Text="{Binding StatusMessage}"
+                       Foreground="Red"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="0,15,0,0"/>
+
+        </Grid>
+    </Border>
+</Window>

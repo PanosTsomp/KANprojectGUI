@@ -5,6 +5,7 @@ using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using KANprojectGUI.Managers;
+using KANprojectGUI.Models;
 using KANprojectGUI.ViewModels;
 using KANprojectGUI.Views;
 
@@ -27,7 +28,9 @@ public partial class App : Application
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit.
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
-            desktop.MainWindow = new MainWindow { DataContext = new MainWindowViewModel() };
+
+            var user = new User();
+            desktop.MainWindow = new LoginWindow { DataContext = new LoginWindowViewModel(user) };
         }
 
         base.OnFrameworkInitializationCompleted();

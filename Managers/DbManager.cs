@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Npgsql;
 
 namespace KANprojectGUI.Managers;
@@ -46,11 +47,28 @@ public class DbManager : Singleton<DbManager>
         cmd.Parameters.AddWithValue("email", email);
         cmd.Parameters.AddWithValue("password", password);
 
-        var reuslt = cmd.ExecuteNonQuery();
+        var result = cmd.ExecuteNonQuery();
 
-        if (reuslt > 0)
-            Console.WriteLine("Insert successful.");
-        else
-            Console.WriteLine("Insert failed - no rows affected");
+        Console.WriteLine(result > 0 ? "Insert successful." : "Insert failed - no rows affected");
+    }
+
+    public bool UserExists(string name, string password, string email)
+    {
+        using var cmd = new NpgsqlCommand(
+            "SELECT COUNT(*) FROM public.users WHERE name = @name AND password = @password AND email = @email;",
+            _conn
+        );
+
+        cmd.Parameters.AddWithValue("name", name);
+        cmd.Parameters.AddWithValue("password", password);
+        cmd.Parameters.AddWithValue("email", email);
+        
+        Console.WriteLine(name);
+        Console.WriteLine(email);
+        Console.WriteLine(password);
+
+        var count = (long)(cmd.ExecuteScalar());
+        
+        return count > 0;
     }
 }
