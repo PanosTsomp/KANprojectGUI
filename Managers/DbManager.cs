@@ -1,5 +1,5 @@
 using System;
-using System.Diagnostics;
+using System.Text.RegularExpressions;
 using Npgsql;
 
 namespace KANprojectGUI.Managers;
@@ -37,9 +37,32 @@ public class DbManager : Singleton<DbManager>
             _conn
         );
 
+        // Console writelines should become error messages in the future
+        // Basic validation
+        if (
+            string.IsNullOrWhiteSpace(name)
+            || string.IsNullOrWhiteSpace(password)
+            || string.IsNullOrWhiteSpace(email)
+        )
+        {
+            Console.WriteLine("Name, password, and email cannot be empty.");
+            return;
+        }
+
+        // Simple email-format check
+        if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.IgnoreCase))
+        {
+            Console.WriteLine("Invalid email format.");
+            return;
+        }
+
+        // Hash the passowrd
+        var hash = BCrypt.Net.BCrypt.HashPassword(password);
+
+        // Add values to the cmd
         cmd.Parameters.AddWithValue("name", name);
         cmd.Parameters.AddWithValue("email", email);
-        cmd.Parameters.AddWithValue("password", password);
+        cmd.Parameters.AddWithValue("password", hash);
 
         var result = cmd.ExecuteNonQuery();
 
