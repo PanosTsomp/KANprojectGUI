@@ -10,13 +10,12 @@ sealed class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        // Setup configuration from environment variables and JSON
-        var configBuilder = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-            .AddEnvironmentVariables(); // allows ConnectionStrings__Default
+        // Setup configuration from environment variables
+        var configBuilder = new ConfigurationBuilder().AddEnvironmentVariables(); // allows to take connString from env variable
 
         Configuration = configBuilder.Build();
 
+        // If we want to configure something we have to do it, before Avalonia gets initialized
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
 
