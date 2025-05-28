@@ -1,19 +1,25 @@
 ﻿using System;
 using Avalonia;
-
-namespace KANprojectGUI;
+using KANprojectGUI;
+using Microsoft.Extensions.Configuration;
 
 sealed class Program
 {
-    // Initialization code. Don't use any Avalonia, third-party APIs or any
-    // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-    // yet and stuff might break.
-    [STAThread]
-    public static void Main(string[] args) =>
-        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+    public static IConfiguration Configuration { get; private set; }
 
-    // Avalonia configuration, don't remove; also used by visual designer.
+    [STAThread]
+    public static void Main(string[] args)
+    {
+        // Setup configuration from environment variables and JSON
+        var configBuilder = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables(); // allows ConnectionStrings__Default
+
+        Configuration = configBuilder.Build();
+
+        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+    }
+
     public static AppBuilder BuildAvaloniaApp() =>
         AppBuilder.Configure<App>().UsePlatformDetect().WithInterFont().LogToTrace();
 }
-

@@ -10,13 +10,7 @@ public class DbManager : Singleton<DbManager>
 
     public void ConnectToDatabase()
     {
-        var connString =
-            "Host=todoeatdb.postgres.database.azure.com;"
-            + "Database=postgres;"
-            + "Port=5432;"
-            + "User Id=todoeat;"
-            + "Password=GxcH$66@Nx3HyqgP;"
-            + "Ssl Mode=Require";
+        var connString = Program.Configuration["ConnectionStrings:Default"];
 
         try
         {
@@ -33,7 +27,7 @@ public class DbManager : Singleton<DbManager>
             Console.WriteLine($"Unexpected error: {ex.Message}");
             Environment.Exit(1);
         }
-        Console.Write("Connectd to databse");
+        Console.Write("Connected to databse");
     }
 
     public void AddUser(string name, string password, string email)
@@ -62,13 +56,13 @@ public class DbManager : Singleton<DbManager>
         cmd.Parameters.AddWithValue("name", name);
         cmd.Parameters.AddWithValue("password", password);
         cmd.Parameters.AddWithValue("email", email);
-        
+
         Console.WriteLine(name);
         Console.WriteLine(email);
         Console.WriteLine(password);
 
         var count = (long)(cmd.ExecuteScalar());
-        
+
         return count > 0;
     }
 }
